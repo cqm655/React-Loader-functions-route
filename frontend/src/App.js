@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import EventsPage from "./pages/EventsPage";
+import EventsPage from "./pages/Events";
 import EventDetailPage from "./pages/EventDetailPage";
 import NewEventPage from "./pages/NewEventPage";
 import EditEventPage from "./pages/EditEventPage";
@@ -45,6 +45,16 @@ function App() {
             {
               index: true,
               element: <EventsPage />,
+              loader: async () => {
+                const response = await fetch("http://localhost:8080/events");
+
+                if (!response.ok) {
+                } else {
+                  const resData = await response.json();
+                  return resData.events;
+                  // loader always wait for a method, and we can return the fetch`d data and use it in EventsPage in these case. We must use ~.events to get array of data from backend~
+                }
+              },
             },
             {
               path: ":eventId",
